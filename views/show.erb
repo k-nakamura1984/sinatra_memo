@@ -1,0 +1,25 @@
+<% file = File.open("data/#{@id}.json") %>
+<% data = JSON.load(file, nil, symbolize_names: true, create_additions: false) %>
+
+<div class="row">
+  <div class="col">Title</div>
+  <div class="col-12 border border-grey"><%= escape_html p data[:title] %></div>
+</div>
+<div class="row">
+  <div class="col">Content</div>
+  <div class="col-12 border border-grey">
+    <pre style="font-size:medium"><%= escape_html p data[:content] %></pre>
+  </div>
+</div>
+<p></p>
+
+<a href="/memos/<%= @id %>/edit" class="btn btn-warning">変更</a>
+<p></p>
+
+<a href="/memos" class="btn btn-secondary">戻る</a>
+<p></p>
+
+<form action="/memos/<%= data[:id] %>" method="post">
+  <input type="hidden" name="_method" value="DELETE">
+  <button type="submit" class="btn btn-danger">削除</button>
+</form>

@@ -1,0 +1,11 @@
+<a href='/memos/new' class="btn btn-primary">新規作成</a>
+<p></p>
+
+<ul>
+  <% @directory.sort_by! { |file| File.mtime(file) }.reverse! %>
+  <% @directory.each do |file|
+    json = File.open(file)
+    data = JSON.load(json, nil, symbolize_names: true, create_additions: false) %>
+    <li><a href="memos/<%= data[:id] %>"><%= data[:title] %></a></li>
+  <% end %>
+</ul>
