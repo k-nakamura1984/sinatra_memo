@@ -1,20 +1,13 @@
-<% json = File.open("data/#{@id}.json") %>
-<% data = JSON.load(json, nil, symbolize_names: true, create_additions: false) %>
-
-<form action="/memos/<%= data[:id] %>/edit" method="post">
+<form action="/memos/<%= @json[:id] %>/edit" method="post">
   <div class="form-group">
     <label>Title</label>
     <input type="hidden" name="_method" value="PATCH">
-    <input type="text" class="form-control" name='title' required value="<%= data[:title] %>">
+    <input type="text" class="form-control" name='title' required value="<%= @json[:title] %>">
   </div>
   <div class="form-group">
     <label>Content</label>
-    <textarea type="text" class="form-control" name='content'><%= data[:content] %></textarea>
+    <textarea type="text" class="form-control" name='content'><%= @json[:content] %></textarea>
   </div>
-  <p></p>
-
   <button type="submit"  class="btn btn-primary">保存</button>
 </form>
-<p></p>
-
-<a href= "/memos/<%= @id %>" class="btn btn-secondary">戻る</a>
+<a href= "/memos/<%= @json[:id] %>" class="btn btn-secondary">戻る</a>

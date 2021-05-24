@@ -19,6 +19,11 @@ not_found do
 end
 
 get '/memos' do
+  @directory.sort_by! { |file| File.mtime(file) }.reverse!
+  @jsons = @directory.map do |file|
+    json = File.read(file)
+    JSON.parse(json, symbolize_names: true)
+  end
   erb :memos
 end
 
@@ -35,18 +40,19 @@ post '/memos/new' do
 end
 
 get '/memos/:id' do
-  @id = params['id']
+  file = File.read("data/#{params['id']}.json")
+  @json = JSON.parse(file, symbolize_names: true)
   erb :show
 end
 
 get '/memos/:id/edit' do
-  @id = params['id']
+  file = File.read("data/#{params['id']}.json")
+  @json = JSON.parse(file, symbolize_names: true)
   erb :edit
 end
 
 patch '/memos/:id/edit' do
-  @id = params['id']
-  hash = { id: @id, title: params[:title], content: params[:content] }
+  hash = { id: params['id'], title: params[:title], content: params[:content] }
   File.open("data/#{hash[:id]}.json", 'w') do |file|
     file.puts JSON.pretty_generate(hash)
   end
@@ -54,9 +60,8 @@ patch '/memos/:id/edit' do
 end
 
 delete '/memos/:id' do
-  @id = params['id']
   begin
-    File.delete("data/#{@id}.json")
+    File.delete("data/#{params['id']}.json")
   rescue StandardError
     p $ERROR_INFO
   end
