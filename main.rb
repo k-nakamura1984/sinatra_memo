@@ -21,27 +21,27 @@ class Memo
   @connection = PG.connect(dbname: DB_NAME)
 
   class << self
-    def show_memos
+    def show
       show_query = "SELECT * FROM #{TABLE_NAME}"
-      @connection.exec(show_query).map { |rows| rows }
+      @connection.exec(show_query).map
     end
 
-    def read_memo(id:)
+    def read(id:)
       read_query = "SELECT * FROM #{TABLE_NAME} WHERE id = $1"
       @connection.exec(read_query, [id])
     end
 
-    def create_memo(id:, title:, content:)
+    def create(id:, title:, content:)
       create_query = "INSERT INTO #{TABLE_NAME} (id, title, content) VALUES ($1, $2, $3)"
       @connection.exec(create_query, [id, title, content])
     end
 
-    def edit_memo(id:, title:, content:)
+    def edit(id:, title:, content:)
       edit_query = "UPDATE #{TABLE_NAME} SET (title, content) = ($2, $3) WHERE id = $1"
       @connection.exec(edit_query, [id, title, content])
     end
 
-    def delete_memo(id:)
+    def delete(id:)
       delete_query = "DELETE FROM #{TABLE_NAME} WHERE id = $1"
       @connection.exec(delete_query, [id])
     end
@@ -49,24 +49,24 @@ class Memo
 end
 
 get '/memos' do
-  @rows = Memo.show_memos
+  @rows = Memo.show
   erb :memos
 end
 
 post '/memos/new' do
   uuid = SecureRandom.uuid
-  Memo.create_memo(id: uuid, title: params[:title], content: params[:content])
+  Memo.create(id: uuid, title: params[:title], content: params[:content])
   redirect to("/memos/#{uuid}")
 end
 
 patch '/memos/:id/edit' do
-  Memo.edit_memo(id: params[:id], title: params[:title], content: params[:content])
+  Memo.edit(id: params[:id], title: params[:title], content: params[:content])
   redirect to("/memos/#{params['id']}")
 end
 
 delete '/memos/:id' do
   begin
-    Memo.delete_memo(id: params[:id])
+    Memo.delete(id: params[:id])
   rescue StandardError
     p $ERROR_INFO
   end
@@ -78,7 +78,7 @@ get '/memos/new' do
 end
 
 get '/memos/:id' do
-  Memo.read_memo(id: params[:id]).each do |row|
+  Memo.read(id: params[:id]).each do |row|
     @id = row['id']
     @title = row['title']
     @content = row['content']
@@ -87,7 +87,7 @@ get '/memos/:id' do
 end
 
 get '/memos/:id/edit' do
-  Memo.read_memo(id: params[:id]).each do |row|
+  Memo.read(id: params[:id]).each do |row|
     @id = row['id']
     @title = row['title']
     @content = row['content']
