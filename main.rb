@@ -23,7 +23,7 @@ class Memo
   class << self
     def show
       show_query = "SELECT * FROM #{TABLE_NAME}"
-      @connection.exec(show_query).map
+      @connection.exec(show_query)
     end
 
     def read(id:)
