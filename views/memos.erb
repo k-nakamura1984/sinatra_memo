@@ -1,6 +1,6 @@
 <a href='/memos/new' class="btn btn-primary">新規作成</a>
 <ul>
-  <% @jsons.each do |json| %>
-    <li><a href="memos/<%= json[:id] %>"><%= json[:title] %></a></li>
+  <% @rows.each do |row| %>
+    <li><a href="memos/<%= row['id'] %>"><%= row['title'] %></a></li>
   <% end %>
 </ul>

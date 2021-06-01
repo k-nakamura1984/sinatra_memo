@@ -1,5 +1,0 @@
-{
-  "id": "1e5b4132-c2d9-4162-bbe9-adb5eb90bad3",
-  "title": "test_xss2",
-  "content": "<script>location.href=\"https://qiita.com/\"</script>"
-}
